@@ -1,0 +1,5 @@
+InitPlayer -> Call with Points, Rounds, Rating in that order.
+PWin -> Call with Player and opponents Rating.
+PDraw -> Call with Player and opponents Rating.
+PLoss -> Call with Player and opponents Rating.
+All above functions returns a Player struct with updated information
