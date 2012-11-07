@@ -1,0 +1,2 @@
+A small library for elo rating calculations writting in go.
+I plan to add some features for easier checking of bonus score.

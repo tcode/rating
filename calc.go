@@ -1,5 +1,11 @@
 package rating
 
+/*
+ Copyright Tobias Lindgaard
+ LICENSE GPLv3 or later
+ for further details read the LICENSE file.
+*/
+
 import (
 	"math"
 )
