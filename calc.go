@@ -30,7 +30,8 @@ type Player struct {
 /*
  I would like to have a variable containing the Player.
  But then I might want more than one, which seems to be a bit hacky.
- But I would perhaps also like to have a commmand center to issue the commaands to the other functions.
+ But I would perhaps also like to have a commmand center to issue the
+ commands to the other functions.
 */
 
 
@@ -100,6 +101,23 @@ func PLoss(a Player, opp float64) Player {
 	return a
 }
 
+// some function for checking for bonus should go here.
 
-// New functions for use with a player, and not as a single calculation, the above
-// Are not designed to be used for a things other than quick single calculations on one game rating.
+func Check_Bonus(a Player) float64 {
+	bon := float64(0)
+	if a.R >= 5 {
+		bon = 1.5
+	} else if a.R > 7 {
+		bon = 2
+	} else if a.R > 9 {
+		bon = 2.5
+	} else if a.R > 11 {
+		bon = 3
+	}
+	extra := a.P - bon
+	val := float64(0)
+	if extra > 0 {
+		val = extra
+	}
+	return val
+}
