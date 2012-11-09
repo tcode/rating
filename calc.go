@@ -113,6 +113,8 @@ func Check_Bonus(a Player) float64 {
 		bon = 2.5
 	} else if a.R > 11 {
 		bon = 3
+	} else if a.R > 13 {
+		bon = 3.5
 	}
 	extra := a.P - bon
 	val := float64(0)
