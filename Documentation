@@ -3,3 +3,10 @@ PWin -> Call with Player and opponents Rating.
 PDraw -> Call with Player and opponents Rating.
 PLoss -> Call with Player and opponents Rating.
 All above functions returns a Player struct with updated information
+
+
+==UPDATE==
+Functions PWin PDraw PLoss are redesigned.
+Now they do not take a Player in the arguments, 
+instead you should call InitPlayer, which returns a player, you just need to supply a rating.
+Now all the functions take just a float64 and calls like methods on the Player 'object'.
