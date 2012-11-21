@@ -15,6 +15,7 @@ type Player struct {
 	R float64 // short for rounds
 	Ra float64 // Short for rating
 	E float64 // Short for expected
+	K float64
 }
 
 /*
@@ -35,8 +36,13 @@ type Player struct {
 */
 
 
+<<<<<<< HEAD
 func InitPlayer(Ra float64 ) Player {
 	N := Player{0, 0, Ra, 0}
+=======
+func InitPlayer(P, R, Ra, K float64 ) Player {
+	N := Player{P, R, Ra, 0}
+>>>>>>> d0c7fccd3ef9ae80cef2c35adc4032e40abea3e9
 	return N
 } 
 // Returns a Player "object" with 4 fields for float64, 
@@ -74,6 +80,7 @@ func Draw(rating, opp float64) float64 {
 }
 
 func (p *Player) PWin(opp float64) *Player {
+<<<<<<< HEAD
 	res := Win(p.Ra, opp)
 	p.Ra = res + p.Ra
 	p.R += 1
@@ -97,6 +104,32 @@ func (p *Player) PLoss (opp float64) *Player {
 	p.R += 1
 	p.P += 0
 	p.E += Expected(p.Ra, opp)
+=======
+	
+	res := Win(p.Ra, opp)
+	p.Ra = res
+	p.R += 1
+	p.P +=1
+	p.E += Expected(rating, opp)
+	return p
+}
+
+func (p *Player) PDraw(opp float64) Player {
+	res := Draw(p.Ra, opp)
+	p.Ra = res
+	p.R += 1
+	p.P += 0.5
+	p.E += Expected(rating, opp)
+	return p
+}
+
+func (p *Player) PLoss(opp float64) Player {
+	res := Loss(p.Ra, opp)
+	p.Ra = res
+	p.R += 1
+	p.P += 0
+	p.E += Expected(rating, opp)
+>>>>>>> d0c7fccd3ef9ae80cef2c35adc4032e40abea3e9
 	return p
 }
 
