@@ -15,7 +15,7 @@ type Player struct {
 	R float64 // short for rounds
 	Ra float64 // Short for rating
 	E float64 // Short for expected
-	K float64
+	K float64 // Slot for the K factor.
 }
 
 /*
@@ -36,17 +36,10 @@ type Player struct {
 */
 
 
-<<<<<<< HEAD
-func InitPlayer(Ra float64 ) Player {
-	N := Player{0, 0, Ra, 0}
-=======
-func InitPlayer(P, R, Ra, K float64 ) Player {
-	N := Player{P, R, Ra, 0}
->>>>>>> d0c7fccd3ef9ae80cef2c35adc4032e40abea3e9
+	func InitPlayer(Ra, K float64 ) Player {
+	N := Player{0, 0, Ra, 0, K}
 	return N
-} 
-// Returns a Player "object" with 4 fields for float64, 
-// everything in this package is float64
+} // Returns a Player "object" with 4 fields for float64, everything in this package is float64
 
 
 func Expected(rating, opp float64) float64 {
@@ -79,58 +72,31 @@ func Draw(rating, opp float64) float64 {
 	return loss
 }
 
-func (p *Player) PWin(opp float64) *Player {
-<<<<<<< HEAD
-	res := Win(p.Ra, opp)
-	p.Ra = res + p.Ra
-	p.R += 1
-	p.P +=1
-	p.E += Expected(p.Ra, opp)
-	return p
+func (a *Player) PWin(opp float64) *Player {
+	res := Win(a.Ra, opp)
+	a.Ra += res
+	a.R += 1
+	a.P +=1
+	a.E += Expected(a.Ra, opp)
+	return a
 }
 
-func (p *Player) PDraw(opp float64) *Player {
-	res := Draw(p.Ra, opp)
-	p.Ra = p.Ra + res
-	p.R += 1
-	p.P += 0.5
-	p.E += Expected(p.Ra, opp)
-	return p
+func (a *Player) PDraw(opp float64) *Player {
+	res := Draw(a.Ra, opp)
+	a.Ra += res
+	a.R += 1
+	a.P += 0.5
+	a.E += Expected(a.Ra, opp)
+	return a
 }
 
-func (p *Player) PLoss (opp float64) *Player {
-	res := Loss(p.Ra, opp)
-	p.Ra = res + p.Ra
-	p.R += 1
-	p.P += 0
-	p.E += Expected(p.Ra, opp)
-=======
-	
-	res := Win(p.Ra, opp)
-	p.Ra = res
-	p.R += 1
-	p.P +=1
-	p.E += Expected(rating, opp)
-	return p
-}
-
-func (p *Player) PDraw(opp float64) Player {
-	res := Draw(p.Ra, opp)
-	p.Ra = res
-	p.R += 1
-	p.P += 0.5
-	p.E += Expected(rating, opp)
-	return p
-}
-
-func (p *Player) PLoss(opp float64) Player {
-	res := Loss(p.Ra, opp)
-	p.Ra = res
-	p.R += 1
-	p.P += 0
-	p.E += Expected(rating, opp)
->>>>>>> d0c7fccd3ef9ae80cef2c35adc4032e40abea3e9
-	return p
+func(a *Player) PLoss(opp float64) *Player {
+	res := Loss(a.Ra, opp)
+	a.Ra += res
+	a.R += 1
+	a.P += 0
+	a.E += Expected(a.Ra, opp)
+	return a
 }
 
 // some function for checking for bonus should go here.
@@ -155,10 +121,3 @@ func Check_Bonus(a Player) float64 {
 	}
 	return val
 }
-
-/*
- New ideas for improvements would be to take a list of opponents and 
- do some reduce on and get the rating of a player out from that, (perhaps some 
- with a structure of {{1540, 1}, {1670, 0.5}}, so that the format is opponents rating, then the result.
-
-*/
