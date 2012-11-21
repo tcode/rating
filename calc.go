@@ -1,162 +1,126 @@
-package chessboard
+package rating
+
+/*
+ Copyright Tobias Lindgaard
+ LICENSE GPLv3 or later
+ for further details read the LICENSE file.
+*/
 
 import (
-  "mystring"
-	"strings"
-	"fmt"
+	"math"
 )
 
-
-type Board string
-
-type Piece struct {
-	Color string
-	Type  string
-	Row   int
-	Col   int
+type Player struct {
+	P float64 // short for points
+	R float64 // short for rounds
+	Ra float64 // Short for rating
+	E float64 // Short for expected
+	K float64 // Slot for the K factor.
 }
 
+/*
+ The above code is part of a implementation of some bonus score checking thing.
+ Not implemented yet.
+*/
+
+// I could make a struct where I store the k factor, so that you just set it
+// then you only need to change it if you want to calculate for another 
+// k-factor. 
 
 
-func Parse(str string) string { // but what should this return ?
-	ree := ""
-	for x :=0; x < len(str); x++ {
-		value := mystring.GetElem(str, x)
-		// Here I would just want to write some if statements
-		// for where my code should pass the value off to get parsed.
-		if value == "0" || value == "1" || value == "2" || value == "3" || value == "4" ||
-			value == "5" || value == "6" || value == "7" || value == "8" {
-			p := ParseNumber(value)
-			np := mystring.Join(p)
-			ree += np
-		} else {
-			ree += value
-			ree += " "
-		}
-	}
-	return ree
+/*
+ I would like to have a variable containing the Player.
+ But then I might want more than one, which seems to be a bit hacky.
+ But I would perhaps also like to have a commmand center to issue the
+ commands to the other functions.
+*/
+
+
+	func InitPlayer(Ra, K float64 ) Player {
+	N := Player{0, 0, Ra, 0, K}
+	return N
+} // Returns a Player "object" with 4 fields for float64, everything in this package is float64
+
+
+func Expected(rating, opp float64) float64 {
+	temp := math.Pow(10, (opp-rating)/400)
+	expected := 1/(1+temp)
+	return expected
+} // This is perhaps the single most important function in this file.
+// Since all other functions are depending on this, or at least they should be.
+
+
+func Loss(rating, opp float64) float64 {
+	k := float64(45)
+	exp := Expected(rating, opp)
+	loss := (1.0-exp-1.0)*k
+	return loss
 }
 
-func Display(str string) {
-	lines = string.Split(str, "/")
-	for x:=0;x>8;x++ {
-		
-		for y:=0;y>len(lines[x]);y++ {
-			pstr := ParseNumber(mystring.GetElem(lines[x], 0)) 
-			fmt.Printf("%v", pstr)
-		}
-	}
+func Win(rating, opp float64) float64 {
+	k := float64(45)
+	exp := Expected(rating, opp)
+	loss := (1.0-exp)*k
+	return loss
+
 }
 
-func ParseFEN(s string) {
-	
+func Draw(rating, opp float64) float64 {
+	k := float64(45)
+	exp := Expected(rating, opp)
+	loss := (1.0-exp-0.5)*k
+	return loss
 }
 
-// this function only takes a single element list
-func ParseNumber(s string) []string {
-	a:=[]string{}
-	if s == "1" {
-		a = append(a, ".")
-	} else if s == "2" {
-		for x:=0;x<2;x++ {
-			a = append(a, ".")
-		}
-	} else if s == "3" {
-		for x:=0;x<3;x++ {
-			a = append(a, ".")
-		}
-	} else if s == "4" {
-		for x:=0;x<4;x++ {
-			a = append(a, ".")
-		}
-	} else if s == "5" {
-		for x:=0;x<5;x++ {
-			a = append(a, ".")
-		}
-	} else if s == "6" {
-		for x:=0;x<6;x++ {
-			a = append(a, ".")
-		}
-	} else if s == "7" {
-		for x:=0;x<7;x++ {
-			a = append(a, ".")
-		}
-	} else if s == "8" {
-		for x:=0;x<8;x++ {
-			a = append(a, ".")
-		}
-	}
+func (a *Player) PWin(opp float64) *Player {
+	res := Win(a.Ra, opp)
+	a.Ra += res
+	a.R += 1
+	a.P +=1
+	a.E += Expected(a.Ra, opp)
 	return a
 }
 
-func ParseUnit(s string) Piece {
-	p:=Piece{}
-	lines := strings.Split(s, "/")
-	for y:=0;y<len(lines[0]);y++ {
-		a := mystring.GetElem(lines[0], y)
-		if a == "p" {
-			p.Type = "Pawn"
-			p.Color = "Black"
-			p.Col = y
-		} else if a == "P" {
-			p.Type = "Pawn"
-			p.Color = "White"
-			p.Col = y
-		} else if a == "n" {
-			p.Type = "Knight"
-			p.Color = "Black"
-			p.Col = y
-		} else if a == "N" {
-			p.Type = "Knight"
-			p.Color = "White"
-			p.Col = y
-		} else if a == "b" {
-			p.Type = "Bishop"
-			p.Color = "Black"
-			p.Col = y
-		} else if a == "B" {
-			p.Type = "Bishop"
-			p.Color = "White"
-			p.Col = y
- 		} else if a == "r" {
-			p.Type = "Rook"
-			p.Color = "Black"
-			p.Col = y
-		} else if a == "R" {
-			p.Type = "Rook"
-			p.Color = "White" 
-			p.Col = y
-		} else if a == "q" {
-			p.Type = "Queen"
-			p.Color = "Black" 
-			p.Col = y
-		} else if a == "Q" {
-			p.Type = "Queen"
-			p.Color = "White" 
-			p.Col = y
-		} else if a == "k" {
-			p.Type = "King"
-			p.Color = "Black" 
-			p.Col = y
-		} else if a == "K" {
-			p.Type = "King"
-			p.Color = "White" 
-			p.Col = y
-		} else {
-			
-		}
-	}
-	return p
+func (a *Player) PDraw(opp float64) *Player {
+	res := Draw(a.Ra, opp)
+	a.Ra += res
+	a.R += 1
+	a.P += 0.5
+	a.E += Expected(a.Ra, opp)
+	return a
 }
 
+func(a *Player) PLoss(opp float64) *Player {
+	res := Loss(a.Ra, opp)
+	a.Ra += res
+	a.R += 1
+	a.P += 0
+	a.E += Expected(a.Ra, opp)
+	return a
+}
 
+// some function for checking for bonus should go here.
 
-
-// How do I make something which keeps a decent representation of the board.?
-
-
-
-
+func Check_Bonus(a Player) float64 {
+	bon := float64(0)
+	if a.R >= 5 {
+		bon = 1.5
+	} else if a.R > 7 {
+		bon = 2
+	} else if a.R > 9 {
+		bon = 2.5
+	} else if a.R > 11 {
+		bon = 3
+	} else if a.R > 13 {
+		bon = 3.5
+	}
+	extra := a.P - bon
+	val := float64(0)
+	if extra > 0 {
+		val = extra
+	}
+	return val
+}
 
 
 
