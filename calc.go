@@ -29,27 +29,6 @@ type Player struct {
  commands to the other functions.
 */
 
-
-func InitPlayer(Ra, K float64 ) Player {
-	N := Player{0, 0, Ra, 0, K}
-	return N
-}
-
-
-func Expected(rating, opp float64) float64 {
-	temp := math.Pow(10, (opp-rating)/400)
-	expected := 1/(1+temp)
-	return expected
-} // This is perhaps the single most important function in this file.
-// Since all other functions are depending on this, or at least they should be.
-/*
- I would like to have a variable containing the Player.
- But then I might want more than one, which seems to be a bit hacky.
- But I would perhaps also like to have a commmand center to issue the
- commands to the other functions.
-*/
-
-
 func InitPlayer(Ra, K float64 ) Player {
 	N := Player{0, 0, Ra, 0, K}
 	return N
@@ -64,60 +43,29 @@ func Expected(rating, opp float64) float64 {
 // Since all other functions are depending on this, or at least they should be.
 
 
-func Loss(rating, opp float64) float64 {
-	k := float64(45)
-	exp := Expected(rating, opp)
-	loss := (1.0-exp-1.0)*k
-	return loss
-}
-
-func Win(rating, opp float64) float64 {
+func win(rating, opp float64) float64 {
 	k := float64(45)
 	exp := Expected(rating, opp)
 	loss := (1.0-exp)*k
 	return loss
-
-
-func Loss(rating, opp float64) float64 {
-	k := float64(45)
-	exp := Expected(rating, opp)
-	loss := (1.0-exp-1.0)*k
-	return loss
 }
 
-func Win(rating, opp float64) float64 {
-	k := float64(45)
-	exp := Expected(rating, opp)
-	loss := (1.0-exp)*k
-	return loss
-
-}
-
-func Draw(rating, opp float64) float64 {
+func draw(rating, opp float64) float64 {
 	k := float64(45)
 	exp := Expected(rating, opp)
 	loss := (1.0-exp-0.5)*k
 	return loss
 }
 
-func (a *Player) PWin(opp float64) *Player {
-	res := Win(a.Ra, opp)
-	a.Ra += res
-	a.R += 1
-	a.P +=1
-	a.E += Expected(a.Ra, opp)
-	return a
-}
-
-func Draw(rating, opp float64) float64 {
+func loss(rating, opp float64) float64 {
 	k := float64(45)
 	exp := Expected(rating, opp)
-	loss := (1.0-exp-0.5)*k
+	loss := (1.0-exp-1.0)*k
 	return loss
 }
 
 func (a *Player) PWin(opp float64) *Player {
-	res := Win(a.Ra, opp)
+	res := win(a.Ra, opp)
 	a.Ra += res
 	a.R += 1
 	a.P +=1
@@ -126,7 +74,7 @@ func (a *Player) PWin(opp float64) *Player {
 }
 
 func (a *Player) PDraw(opp float64) *Player {
-	res := Draw(a.Ra, opp)
+	res := draw(a.Ra, opp)
 	a.Ra += res
 	a.R += 1
 	a.P += 0.5
@@ -135,7 +83,7 @@ func (a *Player) PDraw(opp float64) *Player {
 }
 
 func(a *Player) PLoss(opp float64) *Player {
-	res := Loss(a.Ra, opp)
+	res := loss(a.Ra, opp)
 	a.Ra += res
 	a.R += 1
 	a.P += 0
@@ -143,48 +91,6 @@ func(a *Player) PLoss(opp float64) *Player {
 	return a
 }
 
-// some function for checking for bonus should go here.
-
-func Check_Bonus(a Player) float64 {
-	bon := float64(0)
-	if a.R >= 5 {
-		bon = 1.5
-	} else if a.R > 7 {
-		bon = 2
-	} else if a.R > 9 {
-		bon = 2.5
-	} else if a.R > 11 {
-		bon = 3
-	} else if a.R > 13 {
-		bon = 3.5
-	}
-	extra := a.P - bon
-	val := float64(0)
-	if extra > 0 {
-		val = extra
-	}
-	return val
-}
-
-func (a *Player) PDraw(opp float64) *Player {
-	res := Draw(a.Ra, opp)
-	a.Ra += res
-	a.R += 1
-	a.P += 0.5
-	a.E += Expected(a.Ra, opp)
-	return a
-}
-
-func(a *Player) PLoss(opp float64) *Player {
-	res := Loss(a.Ra, opp)
-	a.Ra += res
-	a.R += 1
-	a.P += 0
-	a.E += Expected(a.Ra, opp)
-	return a
-}
-
-// some function for checking for bonus should go here.
 
 func Check_Bonus(a Player) float64 {
 	bon := float64(0)
