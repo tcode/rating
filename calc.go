@@ -73,7 +73,7 @@ func Draw(rating, opp float64) float64 {
 	return loss
 }
 
-func (p Player) PWin(opp float64) Player {
+func (p *Player) PWin(opp float64) *Player {
 	res := Win(p.Ra, opp)
 	p.Ra = res + p.Ra
 	p.R += 1
@@ -82,7 +82,7 @@ func (p Player) PWin(opp float64) Player {
 	return p
 }
 
-func (p Player) PDraw(opp float64) Player {
+func (p *Player) PDraw(opp float64) *Player {
 	res := Draw(p.Ra, opp)
 	p.Ra = p.Ra + res
 	p.R += 1
@@ -91,7 +91,7 @@ func (p Player) PDraw(opp float64) Player {
 	return p
 }
 
-func (p Player) PLoss (opp float64) Player {
+func (p *Player) PLoss (opp float64) *Player {
 	res := Loss(p.Ra, opp)
 	p.Ra = res + p.Ra
 	p.R += 1
